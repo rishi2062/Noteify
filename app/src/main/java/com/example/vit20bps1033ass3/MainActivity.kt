@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
 
                 Box(modifier = Modifier.fillMaxSize()) {
 
-                    //Old floating button
+                    //Removed Old floating button (its commented at the bottom)
                     AddNew()
                 }
             }
@@ -187,7 +187,7 @@ fun AddNew() {
                                         .size(24.dp)
                                         .padding(end = 7.dp)
                                         .clickable {
-                                            //Reminder Activity
+                                            //Reminder Activity Link
                                         })
                                 Text(text = "Make a Reminder", color = Color(0xFF7D9D9C))
                             }
