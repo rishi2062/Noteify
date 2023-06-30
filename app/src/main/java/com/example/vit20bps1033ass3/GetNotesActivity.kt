@@ -24,6 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,8 +33,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -84,10 +88,14 @@ class GetNotesActivity : ComponentActivity() {
                 locationLiveData.startLocationUpdates()
             }
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == 1) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == 1
+            ) {
                 val isReal = true
                 LaunchedEffect(Unit) {
-                    while(isReal) {
+                    while (isReal) {
                         locationLiveData.startLocationUpdates()
                         delay(15000)
                     }
@@ -118,37 +126,68 @@ class GetNotesActivity : ComponentActivity() {
             ) {
                 val location by getLocationLiveData().observeAsState()
 
+                Row(modifier = Modifier
+                    .padding(top = 30.dp, start = 30.dp)
+                    .fillMaxWidth()
+                    .align(alignment = Alignment.Start)) {
+                    Icon(Icons.Filled.ArrowBack, "", Modifier.clickable {
+                        val intent = Intent(
+                            this@GetNotesActivity,
+                            MainActivity::class.java
+                        )
+                        startActivity(intent)
+                        finish()
+                    })
+                }
 
                 val noteType = intent.getStringExtra("noteType")
-                TextField(value = name.value, onValueChange = {
-                    name.value = it
-                    //title
-                }, textStyle = TextStyle.Default.copy(fontSize = 32.sp, fontFamily = lato, fontWeight = FontWeight.Bold),
+                TextField(
+                    value = name.value,
+                    onValueChange = {
+                        name.value = it
+                        //title
+                    },
+                    textStyle = TextStyle.Default.copy(
+                        fontSize = 32.sp,
+                        fontFamily = lato,
+                        fontWeight = FontWeight.Bold
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = Color(0xFF383838),
-                    backgroundColor = Color(0xFFF9F9F9),
-                    textColor = Color(0xFF383838)
-                ),modifier = Modifier
+                        cursorColor = Color(0xFF383838),
+                        backgroundColor = Color(0xFFF9F9F9),
+                        textColor = Color(0xFF383838)
+                    ),
+                    modifier = Modifier
                         .height(80.dp)
                         .fillMaxWidth()
-                        .padding(start = 30.dp, end = 30.dp, top = 0.dp))
-                TextField(value = details.value, onValueChange = {
-                    details.value = it
-                    //description
-                }, textStyle = TextStyle.Default.copy(fontSize = 15.sp, fontFamily = lato, fontWeight = FontWeight.Bold),
+                        .padding(start = 30.dp, end = 30.dp, top = 0.dp)
+                )
+                TextField(
+                    value = details.value,
+                    onValueChange = {
+                        details.value = it
+                        //description
+                    },
+                    textStyle = TextStyle.Default.copy(
+                        fontSize = 15.sp,
+                        fontFamily = lato,
+                        fontWeight = FontWeight.Bold
+                    ),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = Color(0xFF383838),
-                    backgroundColor = Color(0xFFE4DCCF),
-                    textColor = Color(0xFF383838)
-                ), modifier = Modifier
+                        cursorColor = Color(0xFF383838),
+                        backgroundColor = Color(0xFFE4DCCF),
+                        textColor = Color(0xFF383838)
+                    ),
+                    modifier = Modifier
                         .border(width = 0.dp, color = Color.Transparent)
                         .height(480.dp)
                         .padding(all = 30.dp)
-                        .fillMaxWidth())
+                        .fillMaxWidth()
+                )
 
 
 
-                Row(modifier = Modifier.padding(top = 30.dp, start = 30.dp, end = 30.dp)) {
+                Row(modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp)) {
                     Button(
                         onClick = {
                             val noteTitle = name.value
@@ -163,7 +202,7 @@ class GetNotesActivity : ComponentActivity() {
                                     viewModel.updataNote(updateNote)
                                 }
                             } else {
-                                Log.i("TAG","SUBMIT HUA")
+                                Log.i("TAG", "SUBMIT HUA")
                                 if (noteTitle.isNotEmpty() && noteDescription.isNotEmpty()) {
                                     val sdf = SimpleDateFormat("dd MMM yyyy - HH:mm")
                                     val currDate: String = sdf.format(Date())
@@ -186,115 +225,54 @@ class GetNotesActivity : ComponentActivity() {
 
                 }
 
-                Row(modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 12.dp, start = 30.dp, end = 30.dp)) {
-//                    Text(text = "Note taken at:", fontFamily = lato, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    // Make it so that geotag info appears here on clicking the geotag button
 
-                    //  DISPLAY GEOTAG TEXT
-//                    Text(
-//                        text = location?.latitude.toString(),
-//                        fontFamily = lato,
-//                        fontSize = 20.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                    Text(
-//                        text = location?.longitude.toString(),
-//                        fontFamily = lato,
-//                        fontSize = 20.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-                }
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .align(alignment = Alignment.Start)) {
+                    Column() {
+                        var locationdetail by remember {
+                            mutableStateOf("")}
 
-                Box(modifier = Modifier.fillMaxSize()) {
-
-                    //Removed Old floating button (its commented at the bottom)
-                    AddNew()
-                }
-            }
-        }
-    }
-
-
-
-}
-
-@Composable
-fun AddNew() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        val openDialog = remember {
-            mutableStateOf(false)
-        }
-
-        FloatingActionButton(
-            modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 30.dp, bottom = 30.dp),
-            onClick = {
-                openDialog.value = true
-            },
-            backgroundColor = Color.White,
-            contentColor = Color(0xFF7D9D9C),
-            shape = CircleShape
-        ) {
-            Icon(Icons.Filled.Menu, "")
-        }
-
-        if (openDialog.value) {
-            Dialog(
-                onDismissRequest = { openDialog.value = false },
-            ) {
-                Card(
-                    modifier = Modifier
-                        .background(Color(0xffF9F9F9)),
-                    shape = RoundedCornerShape(corner = CornerSize(12.dp))
-                ) {
-                    Column(modifier = Modifier.padding(23.dp)) {
-
-                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                            Image(painter = painterResource(id = R.drawable.sharenb),
+                        Text(
+                            modifier = Modifier.padding(horizontal = 30.dp, vertical = 30.dp),
+                            text =  locationdetail,
+                            fontFamily = lato,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Row(
+                            modifier = Modifier
+                                .padding(bottom = 30.dp, start = 30.dp, end = 30.dp)
+                                .align(alignment = Alignment.Start)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Image(painter = painterResource(id = R.drawable.share),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(end = 7.dp)
+                                    .size(32.dp)
                                     .clickable {
-                                        //Reminder Activity Link
-                                    })
-                            Text(text = "share...", color = Color(0xFF7D9D9C))
-                        }
-                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
 
-                            Image(painter = painterResource(id = R.drawable.geotag),
+                                    })
+
+                            Image(painter = painterResource(id = R.drawable.geotagwb),
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(end = 7.dp)
+                                    .size(36.dp)
                                     .clickable {
-                                        // GEO TAG
+                                        locationdetail =
+                                            "Note taken at:  " +
+                                                    location?.latitude.toString() + ", " +
+                                                    location?.longitude.toString()
+
                                     })
-
-                            Text(text = "geotag", color = Color(0xFF7D9D9C))
-                        }
-
-                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                            Image(painter = painterResource(id = R.drawable.cross),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(end = 7.dp)
-                                    .clickable {
-                                        openDialog.value = false
-                                    })
-
-                            Text(text = "close", color = Color(0xFF7D9D9C))
                         }
 
                     }
                 }
-
             }
-        }}}
+        }
+
+
+    }}
 

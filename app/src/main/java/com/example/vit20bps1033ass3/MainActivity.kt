@@ -120,18 +120,18 @@ class MainActivity : ComponentActivity() {
                             }
                                 Row(modifier = Modifier
                                     .align(Alignment.End)
-                                    .padding(top = 35.dp, bottom = 30.dp, start = 218.dp)){
+                                    .padding(top = 35.dp, bottom = 30.dp, start = 262.dp)){
                                     Image(painter = painterResource(id = R.drawable.share), contentDescription = null,
                                         modifier = Modifier
                                             .size(32.dp)
                                             .clickable {
-                                                viewModel.deleteNote(it)
+                                                // SHARE CODE
                                             })
                                 }
 
                                 Row(modifier = Modifier
                                     .align(Alignment.End)
-                                    .padding(top = 35.dp, bottom = 30.dp, start = 270.dp)){
+                                    .padding(top = 35.dp, bottom = 30.dp, start = 310.dp)){
                                     Image(painter = painterResource(id = R.drawable.delete), contentDescription = null,
                                         modifier = Modifier
                                             .size(32.dp)
@@ -170,86 +170,91 @@ fun AddNew() {
                 contentColor = Color(0xFF7D9D9C),
                 shape = CircleShape
             ) {
-                Icon(Icons.Filled.Add, "")
+                Icon(Icons.Filled.Add, "", Modifier.clickable { val intent = Intent(
+                    this@MainActivity,
+                    GetNotesActivity::class.java
+                )
+                    startActivity(intent)
+                    finish() })
             }
 
-            if (openDialog.value) {
-                Dialog(onDismissRequest = { openDialog.value = false },
-                ) {
-                    Card(modifier = Modifier
-                        .background(Color(0xffF9F9F9)), shape = RoundedCornerShape(corner = CornerSize(12.dp))) {
-                        Column(modifier = Modifier.padding(23.dp)) {
-                            
-                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                                Image(painter = painterResource(id = R.drawable.checklist), contentDescription = null,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(end = 7.dp)
-                                        .clickable {
-                                            //Reminder Activity Link
-                                        })
-                                Text(text = "Make a Reminder", color = Color(0xFF7D9D9C))
-                            }
-                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                                Image(painter = painterResource(id = R.drawable.note), contentDescription = null,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(end = 7.dp)
-                                        .clickable {
-                                            val intent = Intent(
-                                                this@MainActivity,
-                                                GetNotesActivity::class.java
-                                            )
-                                            startActivity(intent)
-                                            finish()
-                                        })
-
-                                Text(text = "note", color = Color(0xFF7D9D9C))
-                            }
-
-                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-
-                                Image(painter = painterResource(id = R.drawable.cross), contentDescription = null,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(end = 7.dp)
-                                        .clickable {
-                                            openDialog.value = false
-                                        })
-
-                                Text(text = "close", color = Color(0xFF7D9D9C))
-                            }
-                            
-                        }
-                    }
-
-                }
-//                AlertDialog(
-//                    onDismissRequest = { openDialog.value = false},
+//            if (openDialog.value) {
+//                Dialog(onDismissRequest = { openDialog.value = false },
+//                ) {
+//                    Card(modifier = Modifier
+//                        .background(Color(0xffF9F9F9)), shape = RoundedCornerShape(corner = CornerSize(12.dp))) {
+//                        Column(modifier = Modifier.padding(23.dp)) {
 //
-//                    title = {
-//                        Text(text = "Hello")
-//                    },
-//                    text = { Text(text = "Do lala?") },
+//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
 //
-//                    confirmButton = {
-//                        Button(onClick = {
-//                            openDialog.value = false
-//                        }) {
-//                            Text(text = "YES")
+//                                Image(painter = painterResource(id = R.drawable.checklist), contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(24.dp)
+//                                        .padding(end = 7.dp)
+//                                        .clickable {
+//                                            //Reminder Activity Link
+//                                        })
+//                                Text(text = "Make a Reminder", color = Color(0xFF7D9D9C))
+//                            }
+//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
+//
+//                                Image(painter = painterResource(id = R.drawable.note), contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(24.dp)
+//                                        .padding(end = 7.dp)
+//                                        .clickable {
+//                                            val intent = Intent(
+//                                                this@MainActivity,
+//                                                GetNotesActivity::class.java
+//                                            )
+//                                            startActivity(intent)
+//                                            finish()
+//                                        })
+//
+//                                Text(text = "note", color = Color(0xFF7D9D9C))
+//                            }
+//
+//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
+//
+//                                Image(painter = painterResource(id = R.drawable.cross), contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(24.dp)
+//                                        .padding(end = 7.dp)
+//                                        .clickable {
+//                                            openDialog.value = false
+//                                        })
+//
+//                                Text(text = "close", color = Color(0xFF7D9D9C))
+//                            }
+//
 //                        }
-//                    },
+//                    }
 //
-//                    dismissButton = {
-//                        Button(onClick = {
-//                            openDialog.value = false
-//                        }) {
-//                            Text(text = "NO")
-//                        }
-//                    })
-            }
+//                }
+////                AlertDialog(
+////                    onDismissRequest = { openDialog.value = false},
+////
+////                    title = {
+////                        Text(text = "Hello")
+////                    },
+////                    text = { Text(text = "Do lala?") },
+////
+////                    confirmButton = {
+////                        Button(onClick = {
+////                            openDialog.value = false
+////                        }) {
+////                            Text(text = "YES")
+////                        }
+////                    },
+////
+////                    dismissButton = {
+////                        Button(onClick = {
+////                            openDialog.value = false
+////                        }) {
+////                            Text(text = "NO")
+////                        }
+////                    })
+//            }
         }
     }
 }
