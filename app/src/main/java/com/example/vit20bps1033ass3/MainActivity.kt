@@ -126,6 +126,19 @@ class MainActivity : ComponentActivity() {
                                             .size(32.dp)
                                             .clickable {
                                                 // SHARE CODE
+                                                val intent = Intent()
+                                                intent.action = Intent.ACTION_SEND_MULTIPLE
+                                                intent.putExtra(
+                                                    Intent.EXTRA_TEXT,
+                                                    "Title : " + it.title + "\n" + " Description: " + it.description
+                                                )
+                                                intent.type = "text/plain"
+                                                startActivity(
+                                                    Intent.createChooser(
+                                                        intent,
+                                                        "Send to : "
+                                                    )
+                                                )
                                             })
                                 }
 

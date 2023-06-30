@@ -246,15 +246,7 @@ class GetNotesActivity : ComponentActivity() {
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Image(painter = painterResource(id = R.drawable.share),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .clickable {
-
-                                    })
-
-                            Image(painter = painterResource(id = R.drawable.geotagwb),
+                                Image(painter = painterResource(id = R.drawable.geotagwb),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(36.dp)
