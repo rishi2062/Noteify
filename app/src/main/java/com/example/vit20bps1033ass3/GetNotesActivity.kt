@@ -70,8 +70,8 @@ class GetNotesActivity : ComponentActivity() {
             Font(R.font.latoregular, FontWeight.Normal)
         )
         setContent {
-            val name = remember { mutableStateOf("") }
-            val details = remember { mutableStateOf("") }
+            var name = remember { mutableStateOf("") }
+            var details = remember { mutableStateOf("") }
             db = NoteDatabase.getDatabase(this)
             repo = NoteRepository(db.notesDao())
             viewModel =
@@ -139,7 +139,8 @@ class GetNotesActivity : ComponentActivity() {
                     })
                 }
 
-                val noteType = intent.getStringExtra("noteType")
+
+
                 TextField(
                     value = name.value,
                     onValueChange = {
@@ -184,16 +185,20 @@ class GetNotesActivity : ComponentActivity() {
                         .fillMaxWidth()
                 )
 
-
+                val noteType = intent.getStringExtra("noteType")
+                if (noteType.equals("Edit")) {
+                    name.value = intent.getStringExtra("noteTitle")!!
+                    details.value = intent.getStringExtra("noteDescription")!!
+//
+                }
 
                 Row(modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp)) {
                     Button(
                         onClick = {
                             val noteTitle = name.value
                             val noteDescription = details.value
+
                             if (noteType.equals("Edit")) {
-                                name.value = intent.getStringExtra("noteTitle")!!
-                                details.value = intent.getStringExtra("noteDescription")!!
                                 if (noteTitle.isNotEmpty() && noteDescription.isNotEmpty()) {
                                     val sdf = SimpleDateFormat("dd MMM yyyy - HH:mm")
                                     val currDate: String = sdf.format(Date())
@@ -201,7 +206,7 @@ class GetNotesActivity : ComponentActivity() {
                                     viewModel.updataNote(updateNote)
                                 }
                             } else {
-                                Log.i("TAG", "SUBMIT HUA")
+                                Log.i("TAG123456", "SUBMIT HUA")
                                 if (noteTitle.isNotEmpty() && noteDescription.isNotEmpty()) {
                                     val sdf = SimpleDateFormat("dd MMM yyyy - HH:mm")
                                     val currDate: String = sdf.format(Date())
@@ -266,7 +271,8 @@ class GetNotesActivity : ComponentActivity() {
                                                     location?.latitude?.let {
                                                         location?.longitude?.let { it1 ->
                                                             getCompleteAddressString(
-                                                                it.toDouble(), it1.toDouble())
+                                                                it.toDouble(), it1.toDouble()
+                                                            )
                                                         }
                                                     }
 
