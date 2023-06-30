@@ -26,6 +26,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import com.example.vit20bps1033ass3.model.Notes
 import com.example.vit20bps1033ass3.repository.NoteRepository
 import com.google.android.material.color.utilities.MaterialDynamicColors.background
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.delay
 
 
 import java.text.SimpleDateFormat
@@ -75,7 +77,7 @@ class GetNotesActivity : ComponentActivity() {
                 ViewModelProvider(this, NoteViewModelFactory(repo))[NoteViewModel::class.java]
 
             //LOCATION
-            val isTaggged = false
+            val isTagged = false
             val locationLiveData = LocationLiveData(application)
             fun getLocationLiveData() = locationLiveData
             fun startLocationUpdates() {
@@ -84,10 +86,15 @@ class GetNotesActivity : ComponentActivity() {
 
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == 1) {
                 val isReal = true
-                locationLiveData.startLocationUpdates()
+                LaunchedEffect(Unit) {
+                    while(isReal) {
+                        locationLiveData.startLocationUpdates()
+                        delay(15000)
+                    }
+                }
 
             } else {
-                // from here
+                // from here (DEPRECATED CODE - cleanup)
 //                val requestSinglePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
 //                        isGranted ->
 //                    if (isGranted) {
@@ -179,8 +186,10 @@ class GetNotesActivity : ComponentActivity() {
 
                 }
 
-                Row(modifier = Modifier.align(Alignment.Start).padding(top = 12.dp, start = 30.dp, end = 30.dp)) {
-                    Text(text = "Note taken at:", fontFamily = lato, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Row(modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 12.dp, start = 30.dp, end = 30.dp)) {
+//                    Text(text = "Note taken at:", fontFamily = lato, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     // Make it so that geotag info appears here on clicking the geotag button
 
                     //  DISPLAY GEOTAG TEXT
