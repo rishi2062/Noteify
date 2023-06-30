@@ -1,33 +1,35 @@
 package com.example.vit20bps1033ass3
 
+
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.location.LocationRequest
+import android.location.Geocoder
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,31 +38,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.vit20bps1033ass3.Database.NoteDatabase
 import com.example.vit20bps1033ass3.model.NoteViewModel
 import com.example.vit20bps1033ass3.model.NoteViewModelFactory
 import com.example.vit20bps1033ass3.model.Notes
 import com.example.vit20bps1033ass3.repository.NoteRepository
-import com.google.android.material.color.utilities.MaterialDynamicColors.background
-import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
-
-
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+
 
 class GetNotesActivity : ComponentActivity() {
     private lateinit var viewModel: NoteViewModel
@@ -81,6 +78,8 @@ class GetNotesActivity : ComponentActivity() {
                 ViewModelProvider(this, NoteViewModelFactory(repo))[NoteViewModel::class.java]
 
             //LOCATION
+
+
             val isTagged = false
             val locationLiveData = LocationLiveData(application)
             fun getLocationLiveData() = locationLiveData
@@ -260,10 +259,16 @@ class GetNotesActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .size(36.dp)
                                     .clickable {
+
+
                                         locationdetail =
-                                            "Note taken at:  " +
-                                                    location?.latitude.toString() + ", " +
-                                                    location?.longitude.toString()
+                                            "At:  " +
+                                                    location?.latitude?.let {
+                                                        location?.longitude?.let { it1 ->
+                                                            getCompleteAddressString(
+                                                                it.toDouble(), it1.toDouble())
+                                                        }
+                                                    }
 
                                     })
                         }
@@ -274,5 +279,34 @@ class GetNotesActivity : ComponentActivity() {
         }
 
 
-    }}
+    }
+
+    private fun getCompleteAddressString(LATITUDE: Double, LONGITUDE: Double): String? {
+        var strAdd = ""
+        var res = ""
+        val geocoder = Geocoder(this, Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1)
+            if (addresses != null) {
+                val returnedAddress = addresses[0]
+                val strReturnedAddress = StringBuilder("")
+                for (i in 0..returnedAddress.maxAddressLineIndex) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n")
+                }
+                var city = returnedAddress.locality
+                var state = returnedAddress.adminArea
+                var country = returnedAddress.countryCode
+                res = "$city, $state, $country"
+                strAdd = strReturnedAddress.toString()
+                Log.w("My Current loction address", strReturnedAddress.toString())
+            } else {
+                Log.w("My Current loction address", "No Address returned!")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.w("My Current loction address", "Canont get Address!")
+        }
+        return res
+    }
+}
 
