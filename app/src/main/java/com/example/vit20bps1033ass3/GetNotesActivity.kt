@@ -5,22 +5,34 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModelProvider
 import com.example.vit20bps1033ass3.Database.NoteDatabase
 import com.example.vit20bps1033ass3.model.NoteViewModel
@@ -38,6 +50,10 @@ class GetNotesActivity : ComponentActivity() {
     private lateinit var repo: NoteRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val lato = FontFamily(
+            Font(R.font.latobold, FontWeight.Bold),
+            Font(R.font.latoregular, FontWeight.Normal)
+        )
         setContent {
             val name = remember { mutableStateOf("") }
             val details = remember { mutableStateOf("") }
@@ -56,7 +72,8 @@ class GetNotesActivity : ComponentActivity() {
                 TextField(value = name.value, onValueChange = {
                     name.value = it
                     //title
-                }, colors = TextFieldDefaults.outlinedTextFieldColors(
+                }, textStyle = TextStyle.Default.copy(fontSize = 32.sp, fontFamily = lato, fontWeight = FontWeight.Bold),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color(0xFF383838),
                     backgroundColor = Color(0xFFF9F9F9),
                     textColor = Color(0xFF383838)
@@ -64,7 +81,8 @@ class GetNotesActivity : ComponentActivity() {
                 TextField(value = details.value, onValueChange = {
                     details.value = it
                     //description
-                }, colors = TextFieldDefaults.outlinedTextFieldColors(
+                }, textStyle = TextStyle.Default.copy(fontSize = 32.sp, fontFamily = lato, fontWeight = FontWeight.Bold),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color(0xFF383838),
                     backgroundColor = Color(0xFFE4DCCF),
                     textColor = Color(0xFF383838)
@@ -107,8 +125,93 @@ class GetNotesActivity : ComponentActivity() {
                     }
 
                 }
+
+                Box(modifier = Modifier.fillMaxSize()) {
+
+                    //Removed Old floating button (its commented at the bottom)
+                    AddNew()
+                }
             }
         }
     }
 
 }
+
+@Composable
+fun AddNew() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        val openDialog = remember {
+            mutableStateOf(false)
+        }
+
+        FloatingActionButton(
+            modifier = Modifier
+                .align(alignment = Alignment.BottomEnd)
+                .padding(end = 30.dp, bottom = 30.dp),
+            onClick = {
+                openDialog.value = true
+            },
+            backgroundColor = Color.White,
+            contentColor = Color(0xFF7D9D9C),
+            shape = CircleShape
+        ) {
+            Icon(Icons.Filled.Menu, "")
+        }
+
+        if (openDialog.value) {
+            Dialog(
+                onDismissRequest = { openDialog.value = false },
+            ) {
+                Card(
+                    modifier = Modifier
+                        .background(Color(0xffF9F9F9)),
+                    shape = RoundedCornerShape(corner = CornerSize(12.dp))
+                ) {
+                    Column(modifier = Modifier.padding(23.dp)) {
+
+                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
+
+                            Image(painter = painterResource(id = R.drawable.sharenb),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(end = 7.dp)
+                                    .clickable {
+                                        //Reminder Activity Link
+                                    })
+                            Text(text = "share...", color = Color(0xFF7D9D9C))
+                        }
+                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
+
+                            Image(painter = painterResource(id = R.drawable.geotag),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(end = 7.dp)
+                                    .clickable {
+                                        //GEOTAG CODE
+                                    })
+
+                            Text(text = "geotag", color = Color(0xFF7D9D9C))
+                        }
+
+                        Row(modifier = Modifier.padding(bottom = 10.dp)) {
+
+                            Image(painter = painterResource(id = R.drawable.cross),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(end = 7.dp)
+                                    .clickable {
+                                        openDialog.value = false
+                                    })
+
+                            Text(text = "close", color = Color(0xFF7D9D9C))
+                        }
+
+                    }
+                }
+
+            }
+        }}}
+
