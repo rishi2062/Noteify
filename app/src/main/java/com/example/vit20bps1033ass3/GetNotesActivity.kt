@@ -78,8 +78,6 @@ class GetNotesActivity : ComponentActivity() {
                 ViewModelProvider(this, NoteViewModelFactory(repo))[NoteViewModel::class.java]
 
             //LOCATION
-
-
             val isTagged = false
             val locationLiveData = LocationLiveData(application)
             fun getLocationLiveData() = locationLiveData
@@ -101,17 +99,7 @@ class GetNotesActivity : ComponentActivity() {
                 }
 
             } else {
-                // from here (DEPRECATED CODE - cleanup)
-//                val requestSinglePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-//                        isGranted ->
-//                    if (isGranted) {
-//                        startLocationUpdates()
-//                    } else {
-//                        Toast.makeText(this, "GPS Unavailable", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//                requestSinglePermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                // till here
+                // EMPTY CONDITION
             }
 
 
@@ -140,12 +128,11 @@ class GetNotesActivity : ComponentActivity() {
                 }
 
 
-
                 TextField(
                     value = name.value,
                     onValueChange = {
                         name.value = it
-                        //title
+
                     },
                     textStyle = TextStyle.Default.copy(
                         fontSize = 32.sp,
@@ -162,11 +149,12 @@ class GetNotesActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp, top = 0.dp)
                 )
+
+                // NOTE CONTENT
                 TextField(
                     value = details.value,
                     onValueChange = {
                         details.value = it
-                        //description
                     },
                     textStyle = TextStyle.Default.copy(
                         fontSize = 15.sp,
@@ -185,13 +173,16 @@ class GetNotesActivity : ComponentActivity() {
                         .fillMaxWidth()
                 )
 
+
+
+                // SUBMIT NOTE
+
                 val noteType = intent.getStringExtra("noteType")
                 if (noteType.equals("Edit")) {
                     name.value = intent.getStringExtra("noteTitle")!!
                     details.value = intent.getStringExtra("noteDescription")!!
-//
-                }
 
+                }
                 Row(modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp)) {
                     Button(
                         onClick = {
@@ -229,6 +220,7 @@ class GetNotesActivity : ComponentActivity() {
 
                 }
 
+                // GEOTAG FEATURE
 
                 Box(modifier = Modifier
                     .fillMaxSize()
@@ -251,15 +243,7 @@ class GetNotesActivity : ComponentActivity() {
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Image(painter = painterResource(id = R.drawable.share),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .clickable {
-
-                                    })
-
-                            Image(painter = painterResource(id = R.drawable.geotagwb),
+                                Image(painter = painterResource(id = R.drawable.geotagwb),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(36.dp)
@@ -278,13 +262,10 @@ class GetNotesActivity : ComponentActivity() {
 
                                     })
                         }
-
                     }
                 }
             }
         }
-
-
     }
 
     private fun getCompleteAddressString(LATITUDE: Double, LONGITUDE: Double): String? {
