@@ -78,8 +78,6 @@ class GetNotesActivity : ComponentActivity() {
                 ViewModelProvider(this, NoteViewModelFactory(repo))[NoteViewModel::class.java]
 
             //LOCATION
-
-
             val isTagged = false
             val locationLiveData = LocationLiveData(application)
             fun getLocationLiveData() = locationLiveData
@@ -101,17 +99,7 @@ class GetNotesActivity : ComponentActivity() {
                 }
 
             } else {
-                // from here (DEPRECATED CODE - cleanup)
-//                val requestSinglePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-//                        isGranted ->
-//                    if (isGranted) {
-//                        startLocationUpdates()
-//                    } else {
-//                        Toast.makeText(this, "GPS Unavailable", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//                requestSinglePermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                // till here
+                // EMPTY CONDITION
             }
 
 
@@ -140,11 +128,13 @@ class GetNotesActivity : ComponentActivity() {
                 }
 
                 val noteType = intent.getStringExtra("noteType")
+
+                // TITLE
                 TextField(
                     value = name.value,
                     onValueChange = {
                         name.value = it
-                        //title
+
                     },
                     textStyle = TextStyle.Default.copy(
                         fontSize = 32.sp,
@@ -161,11 +151,12 @@ class GetNotesActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .padding(start = 30.dp, end = 30.dp, top = 0.dp)
                 )
+
+                // NOTE CONTENT
                 TextField(
                     value = details.value,
                     onValueChange = {
                         details.value = it
-                        //description
                     },
                     textStyle = TextStyle.Default.copy(
                         fontSize = 15.sp,
@@ -185,7 +176,7 @@ class GetNotesActivity : ComponentActivity() {
                 )
 
 
-
+                // SUBMIT NOTE
                 Row(modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp)) {
                     Button(
                         onClick = {
@@ -224,6 +215,7 @@ class GetNotesActivity : ComponentActivity() {
 
                 }
 
+                // GEOTAG FEATURE
 
                 Box(modifier = Modifier
                     .fillMaxSize()
@@ -264,13 +256,10 @@ class GetNotesActivity : ComponentActivity() {
 
                                     })
                         }
-
                     }
                 }
             }
         }
-
-
     }
 
     private fun getCompleteAddressString(LATITUDE: Double, LONGITUDE: Double): String? {

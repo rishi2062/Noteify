@@ -61,6 +61,8 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // FONT
         val lato = FontFamily(
             Font(R.font.latobold, FontWeight.Bold),
             Font(R.font.latoregular, FontWeight.Normal)
@@ -69,12 +71,7 @@ class MainActivity : ComponentActivity() {
             db = NoteDatabase.getDatabase(this)
             repo = NoteRepository(db.notesDao())
             viewModel = ViewModelProvider(this, NoteViewModelFactory(repo))[NoteViewModel::class.java]
-//            var notes = remember{ listOf<Notes>() }
-//            viewModel.getNotes.observe(this@MainActivity, Observer { list ->
-//                list?.let {
-//                    notes = list
-//                }
-//            })
+
             val notes by viewModel.getNotes.observeAsState()
             Column(
                 verticalArrangement = Arrangement.Top,
@@ -125,7 +122,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .size(32.dp)
                                             .clickable {
-                                                // SHARE CODE
+                                                // SHARE FEATURE
                                                 val intent = Intent()
                                                 intent.action = Intent.ACTION_SEND_MULTIPLE
                                                 intent.putExtra(
@@ -149,6 +146,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .size(32.dp)
                                             .clickable {
+                                                // DELETE NOTE
                                                 viewModel.deleteNote(it)
                                             })
                                 }
@@ -159,7 +157,6 @@ class MainActivity : ComponentActivity() {
 
                 Box(modifier = Modifier.fillMaxSize()) {
 
-                    //Removed Old floating button (its commented at the bottom)
                     AddNew()
                 }
             }
@@ -183,114 +180,15 @@ fun AddNew() {
                 contentColor = Color(0xFF7D9D9C),
                 shape = CircleShape
             ) {
-                Icon(Icons.Filled.Add, "", Modifier.clickable { val intent = Intent(
+                Icon(Icons.Filled.Add, "", Modifier.clickable {
+                    // CREATE NEW NOTE
+                    val intent = Intent(
                     this@MainActivity,
                     GetNotesActivity::class.java
                 )
                     startActivity(intent)
                     finish() })
             }
-
-//            if (openDialog.value) {
-//                Dialog(onDismissRequest = { openDialog.value = false },
-//                ) {
-//                    Card(modifier = Modifier
-//                        .background(Color(0xffF9F9F9)), shape = RoundedCornerShape(corner = CornerSize(12.dp))) {
-//                        Column(modifier = Modifier.padding(23.dp)) {
-//
-//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-//
-//                                Image(painter = painterResource(id = R.drawable.checklist), contentDescription = null,
-//                                    modifier = Modifier
-//                                        .size(24.dp)
-//                                        .padding(end = 7.dp)
-//                                        .clickable {
-//                                            //Reminder Activity Link
-//                                        })
-//                                Text(text = "Make a Reminder", color = Color(0xFF7D9D9C))
-//                            }
-//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-//
-//                                Image(painter = painterResource(id = R.drawable.note), contentDescription = null,
-//                                    modifier = Modifier
-//                                        .size(24.dp)
-//                                        .padding(end = 7.dp)
-//                                        .clickable {
-//                                            val intent = Intent(
-//                                                this@MainActivity,
-//                                                GetNotesActivity::class.java
-//                                            )
-//                                            startActivity(intent)
-//                                            finish()
-//                                        })
-//
-//                                Text(text = "note", color = Color(0xFF7D9D9C))
-//                            }
-//
-//                            Row(modifier = Modifier.padding(bottom = 10.dp)) {
-//
-//                                Image(painter = painterResource(id = R.drawable.cross), contentDescription = null,
-//                                    modifier = Modifier
-//                                        .size(24.dp)
-//                                        .padding(end = 7.dp)
-//                                        .clickable {
-//                                            openDialog.value = false
-//                                        })
-//
-//                                Text(text = "close", color = Color(0xFF7D9D9C))
-//                            }
-//
-//                        }
-//                    }
-//
-//                }
-////                AlertDialog(
-////                    onDismissRequest = { openDialog.value = false},
-////
-////                    title = {
-////                        Text(text = "Hello")
-////                    },
-////                    text = { Text(text = "Do lala?") },
-////
-////                    confirmButton = {
-////                        Button(onClick = {
-////                            openDialog.value = false
-////                        }) {
-////                            Text(text = "YES")
-////                        }
-////                    },
-////
-////                    dismissButton = {
-////                        Button(onClick = {
-////                            openDialog.value = false
-////                        }) {
-////                            Text(text = "NO")
-////                        }
-////                    })
-//            }
         }
     }
 }
-
-//Box(modifier = Modifier.fillMaxSize()) {
-//
-//
-//    FloatingActionButton(
-//        modifier = Modifier.align(alignment = Alignment.BottomEnd),
-//        onClick = {
-//            val intent = Intent(
-//                this@MainActivity,
-//                GetNotesActivity::class.java
-//            )
-//            startActivity(intent)
-//            finish()
-//
-//
-//        },
-//        backgroundColor = Color.White,
-//        contentColor = Color(0xFF7D9D9C),
-//        shape = CircleShape
-//    ) {
-//        Icon(Icons.Filled.Add, "")
-//    }
-//}
