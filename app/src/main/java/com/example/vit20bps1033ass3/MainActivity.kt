@@ -87,29 +87,42 @@ class MainActivity : ComponentActivity() {
                 LazyColumn(){
                     notes?.let{items ->
                         items(items){
-                            Card(modifier = Modifier
-                                .padding(bottom = 23.dp)
-                                .fillMaxWidth(),
+                            Card(
+                                modifier = Modifier
+                                    .padding(bottom = 23.dp)
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        val intent =
+                                            Intent(this@MainActivity, GetNotesActivity::class.java)
+                                        intent.putExtra("noteType", "Edit")
+                                        intent.putExtra("noteTitle", it.title)
+                                        intent.putExtra("noteDescription", it.description)
+                                        intent.putExtra("noteId", it.id)
+                                        startActivity(intent)
+                                        finish()
+                                    },
                                 elevation = 4.dp, backgroundColor = Color(0xFFE4DCCF),
-                                shape = RoundedCornerShape(corner = CornerSize(12.dp)), onClick = {
-                                    val intent = Intent(this@MainActivity,GetNotesActivity::class.java)
-                                    intent.putExtra("noteType","Edit")
-                                    intent.putExtra("noteTitle",it.title)
-                                    intent.putExtra("noteDescription",it.description)
-                                    intent.putExtra("noteId",it.id)
-                                    startActivity(intent)
-                                    finish()
-                                }) {
+                                shape = RoundedCornerShape(corner = CornerSize(12.dp))
+                            ) {
                                 Row(modifier = Modifier.align(Alignment.Start)) {
-                                Column() {
-                                    Text(
-                                        text = it.title,
-                                        style = TextStyle(color = Color(0xff383838), fontSize = 20.sp, fontWeight = FontWeight.Bold),
-                                        modifier = Modifier.padding(top = 15.dp, start = 10.dp), fontFamily = lato
-                                    )
-                                    Text(
-                                        text = it.timeStamp,
-                                        style = TextStyle(color = Color(0xff6F6F6F), fontSize = 13.sp, fontWeight = FontWeight.Bold),
+                                    Column() {
+                                        Text(
+                                            text = it.title,
+                                            style = TextStyle(
+                                                color = Color(0xff383838),
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold
+                                            ),
+                                            modifier = Modifier.padding(top = 15.dp, start = 10.dp),
+                                            fontFamily = lato
+                                        )
+                                        Text(
+                                            text = it.timeStamp,
+                                            style = TextStyle(
+                                                color = Color(0xff6F6F6F),
+                                                fontSize = 13.sp,
+                                                fontWeight = FontWeight.Bold
+                                            ),
                                         modifier = Modifier.padding(top = 25.dp, start = 10.dp, bottom = 15.dp), fontFamily = lato
                                     )
 
@@ -122,7 +135,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .size(32.dp)
                                             .clickable {
-                                                // SHARE FEATURE
+
                                                 val intent = Intent()
                                                 intent.action = Intent.ACTION_SEND_MULTIPLE
                                                 intent.putExtra(
