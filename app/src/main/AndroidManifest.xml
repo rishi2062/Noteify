@@ -19,6 +19,15 @@
             android:name=".GetNotesActivity"
             android:exported="false" />
         <activity
+            android:name=".ToDoMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GetToDo"
+            android:exported="false" />
+        <activity
+            android:name=".FinishedToDo"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

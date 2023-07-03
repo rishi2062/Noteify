@@ -70,8 +70,8 @@ class GetNotesActivity : ComponentActivity() {
             Font(R.font.latoregular, FontWeight.Normal)
         )
         setContent {
-            var name = remember { mutableStateOf("") }
-            var details = remember { mutableStateOf("") }
+            var name by remember { mutableStateOf("") }
+            var details by remember { mutableStateOf("") }
             db = NoteDatabase.getDatabase(this)
             repo = NoteRepository(db.notesDao())
             viewModel =
@@ -142,11 +142,8 @@ class GetNotesActivity : ComponentActivity() {
 
 
                 TextField(
-                    value = name.value,
-                    onValueChange = {
-                        name.value = it
-                        //title
-                    },
+                    value = name,
+                    onValueChange = { name = it },
                     textStyle = TextStyle.Default.copy(
                         fontSize = 32.sp,
                         fontFamily = lato,
@@ -163,9 +160,9 @@ class GetNotesActivity : ComponentActivity() {
                         .padding(start = 30.dp, end = 30.dp, top = 0.dp)
                 )
                 TextField(
-                    value = details.value,
+                    value = details,
                     onValueChange = {
-                        details.value = it
+                        details = it
                         //description
                     },
                     textStyle = TextStyle.Default.copy(
@@ -187,16 +184,19 @@ class GetNotesActivity : ComponentActivity() {
 
                 val noteType = intent.getStringExtra("noteType")
                 if (noteType.equals("Edit")) {
-                    name.value = intent.getStringExtra("noteTitle")!!
-                    details.value = intent.getStringExtra("noteDescription")!!
+                    val initialName = intent.getStringExtra("noteTitle") ?: ""
+                    val initialDetails = intent.getStringExtra("noteDescription") ?: ""
+
+                    name = initialName
+                    details = initialDetails
 //
                 }
 
                 Row(modifier = Modifier.padding(top = 10.dp, start = 30.dp, end = 30.dp)) {
                     Button(
                         onClick = {
-                            val noteTitle = name.value
-                            val noteDescription = details.value
+                            val noteTitle = name
+                            val noteDescription = details
 
                             if (noteType.equals("Edit")) {
                                 if (noteTitle.isNotEmpty() && noteDescription.isNotEmpty()) {
@@ -256,7 +256,19 @@ class GetNotesActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .size(32.dp)
                                     .clickable {
-
+                                        val intent = Intent()
+                                        intent.action = Intent.ACTION_SEND_MULTIPLE
+                                        intent.putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            "Title : $name\n Description: $details"
+                                        )
+                                        intent.type = "text/plain"
+                                        startActivity(
+                                            Intent.createChooser(
+                                                intent,
+                                                "Send to : "
+                                            )
+                                        )
                                     })
 
                             Image(painter = painterResource(id = R.drawable.geotagwb),
