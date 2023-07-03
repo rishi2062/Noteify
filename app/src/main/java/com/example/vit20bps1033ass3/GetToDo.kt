@@ -130,10 +130,15 @@ class GetToDo : ComponentActivity() {
 
                 // Creating a button that on
                 // click displays/shows the DatePickerDialog
-                Button(onClick = {
-                    mDatePickerDialog.show()
-                }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE4DCCF))) {
-                    Text(text = "Open Date Picker", color = Color.White)
+                Button(
+                    onClick = {
+                        mDatePickerDialog.show()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFE4DCCF)),
+                    modifier = Modifier
+                        .padding(top = 30.dp)
+                ) {
+                    Text(text = "Due Date", color = Color.Black)
                 }
 
                 // Adding a space of 100dp height
