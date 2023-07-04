@@ -1,7 +1,7 @@
 # Noteify
 
 Demo Link:
-https://drive.google.com/file/d/1GYtdRgXdiP-hB2XCwGAZEPDLgJ1R6iin/view?usp=sharing
+https://drive.google.com/file/d/19FPErOW0PpHgNX3gaMAumnLPDo02e0my/view?usp=drivesdk
 
 Project Report:
 https://docs.google.com/document/d/1Zr-WOCUi3bi5XXtn13XwEJ1eMbNPf7y6/edit?usp=sharing&ouid=105876017425575922976&rtpof=true&sd=true
